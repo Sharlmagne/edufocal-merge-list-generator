@@ -20,7 +20,7 @@
         <StackPanel Grid.Row="1" Grid.Column="1" Width="280" HorizontalAlignment="Center">
             <TextBlock Margin="0,0,0,24" FontSize="16" FontWeight="Bold">Edufocal Certificate Generator</TextBlock>
             <TextBlock Margin="0,0,0,4">User Map</TextBlock>
-            <TextBox x:Name="FilePathTextBox" Margin="0,0,0,4" IsReadOnly="True"/>
+            <TextBox x:Name="FilePathTextBox" Margin="0,0,0,4" IsReadOnly="True" Text="{Binding FileName, UpdateSourceTrigger=PropertyChanged}"/>
             <Button Content="Upload" Command="{Binding UploadUserMapCommand}" Margin="0,0,0,4"/>
             <TextBlock Margin="0,16,0,4">User Alias</TextBlock>
             <TextBox x:Name="StudentNameTextBox" Margin="0,0,0,16"/>
