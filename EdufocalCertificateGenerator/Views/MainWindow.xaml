@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:EdufocalCertificateGenerator"
         xmlns:system="clr-namespace:System;assembly=System.Runtime"
         mc:Ignorable="d"
-        Title="EdufocalCG" Height="280" Width="360">
+        Title="EdufocalCG" Height="400" Width="360">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="24"/>
@@ -24,7 +24,9 @@
             <TextBox x:Name="FilePathTextBox" Margin="0,0,0,4" IsReadOnly="True" Text="{Binding FileName, UpdateSourceTrigger=PropertyChanged}"/>
             <Button Content="Upload" Command="{Binding UploadUserMapCommand}" Margin="0,0,0,4"/>
             <TextBlock Margin="0,16,0,4">User Alias</TextBlock>
-            <TextBox x:Name="StudentNameTextBox" Margin="0,0,0,16"/>
+            <TextBox x:Name="UserAliasTextBox" Margin="0,0,0,4" Text="{Binding UserAlias, UpdateSourceTrigger=PropertyChanged}"/>
+            <TextBlock Margin="0,16,0,4">Course Name</TextBlock>
+            <TextBox x:Name="CourseNameTextBox" Margin="0,0,0,16" Text="{Binding CourseName, UpdateSourceTrigger=PropertyChanged}"/>
             <Button Content="Generate" Command="{Binding GenerateCertificateCommand}" Margin="0,16,0,0" HorizontalAlignment="Center" Width="100"/>
         </StackPanel>
     </Grid>

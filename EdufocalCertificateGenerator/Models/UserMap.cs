@@ -1,20 +1,23 @@
-﻿using System.Configuration;
+﻿namespace EdufocalCertificateGenerator.Models;
 
-namespace EdufocalCertificateGenerator.Models;
-
-public class UserMap : ConfigurationSection
+public class UserMap
 {
-    [ConfigurationProperty("MapFilePath", DefaultValue = "")]
-    public string MapFilePath
+    public Dictionary<string, UserInfo> Employees { get; set; }
+
+    public UserMap()
     {
-        get => (string)this["MapFilePath"];
-        set => this["MapFilePath"] = value;
+        Employees = new Dictionary<string, UserInfo>();
     }
 
-    [ConfigurationProperty("FileName", DefaultValue = "")]
-    public string FileName
+    public void AddUser(string aliasEmail, string firstName, string lastName, string companyEmail)
     {
-        get => (string)this["FileName"];
-        set => this["FileName"] = value;
+        var userInfo = new UserInfo
+        {
+            FirstName = firstName,
+            LastName = lastName,
+            CompanyEmail = companyEmail
+        };
+
+        Employees[aliasEmail] = userInfo;
     }
 }

@@ -2,6 +2,7 @@
 using System.IO;
 using System.Windows.Input;
 using EdufocalCertificateGenerator.Models;
+using EdufocalCertificateGenerator.Services;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Win32;
 using NISInspectorApp.Core;
@@ -13,6 +14,9 @@ public class MainViewModel: ViewModel
 
     private string _mapFilePath;
     private string _fileName;
+    private string _userAlias;
+    private string _courseName;
+
 
     public string FileName
     {
@@ -34,6 +38,28 @@ public class MainViewModel: ViewModel
         }
     }
 
+    public string UserAlias
+    {
+        get => _userAlias;
+        set
+        {
+            _userAlias = value;
+            OnPropertyChanged();
+        }
+    }
+
+    public string CourseName
+    {
+        get => _courseName;
+        set
+        {
+            _courseName = value;
+            OnPropertyChanged();
+        }
+    }
+
+
+    private Dictionary<string, UserInfo> _employees = new();
     public ICommand UploadUserMapCommand { get; set; }
     public ICommand GenerateCertificateCommand { get; set; }
     public ICommand RemoveUserMapCommand { get; set; }
@@ -47,17 +73,25 @@ public class MainViewModel: ViewModel
 
         if (AppConfig.Sections["UserMap"] is null)
         {
-            AppConfig.Sections.Add("UserMap", new UserMap());
+            AppConfig.Sections.Add("UserMap", new UserMapSection());
             AppConfig.Save(ConfigurationSaveMode.Modified);
         }
         else
         {
-            var userMap = (UserMap)AppConfig.Sections["UserMap"];
+            var userMap = (UserMapSection)AppConfig.Sections["UserMap"];
             MapFilePath = userMap.MapFilePath;
             FileName = userMap.FileName;
         }
-    }
 
+        // Read Document and generate list of employees
+        if (!string.IsNullOrEmpty(MapFilePath))
+        {
+            var employees = new UserMap();
+            var document = new DocumentReader(MapFilePath);
+            document.GenerateList(employees);
+            _employees = employees.Employees;
+        }
+    }
 
     private void UploadUserMapExecute(object obj)
     {
@@ -75,7 +109,7 @@ public class MainViewModel: ViewModel
 
             var AppConfig = App.Services.GetRequiredService<Configuration>();
 
-            var userMap = (UserMap)AppConfig.Sections["UserMap"];
+            var userMap = (UserMapSection)AppConfig.Sections["UserMap"];
             userMap.MapFilePath = MapFilePath;
             userMap.FileName = FileName;
             AppConfig.Save(ConfigurationSaveMode.Modified);
@@ -89,7 +123,7 @@ public class MainViewModel: ViewModel
         FileName = "";
 
         var AppConfig = App.Services.GetRequiredService<Configuration>();
-        var userMap = (UserMap)AppConfig.Sections["UserMap"];
+        var userMap = (UserMapSection)AppConfig.Sections["UserMap"];
 
         userMap.MapFilePath = MapFilePath;
         userMap.FileName = FileName;
@@ -109,13 +143,23 @@ public class MainViewModel: ViewModel
 
     private void GenerateCertificateExecute(object obj)
     {
-        // Generate certificate
-        throw new NotImplementedException();
+        if (!_employees.ContainsKey(UserAlias))
+        {
+            Console.WriteLine("User not found");
+        } else
+        {
+            Console.WriteLine($"Generate Certificate for {_employees[UserAlias].FirstName} {_employees[UserAlias].LastName} - {CourseName}");
+        }
     }
 
     private bool CanGenerateCertificate(object obj)
     {
         // Check if all fields are filled
+        if (string.IsNullOrEmpty(UserAlias) || string.IsNullOrEmpty(MapFilePath) || string.IsNullOrEmpty(CourseName))
+        {
+            return false;
+        }
+
         return true;
     }
 
