@@ -2,7 +2,7 @@
 
 namespace EdufocalCertificateGenerator.Models;
 
-public class UserMapSection : ConfigurationSection
+public class EmployeeMapSection : ConfigurationSection
 {
     [ConfigurationProperty("MapFilePath", DefaultValue = "")]
     public string MapFilePath

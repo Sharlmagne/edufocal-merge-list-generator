@@ -1,6 +1,6 @@
 ﻿namespace EdufocalCertificateGenerator.Models;
 
-public class UserInfo
+public class EmployeeInfo
 {
     public string FirstName { get; set; }
     public string LastName { get; set; }

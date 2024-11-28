@@ -20,11 +20,11 @@
         </Grid.ColumnDefinitions>
         <StackPanel Grid.Row="1" Grid.Column="1" Width="280" HorizontalAlignment="Center">
             <TextBlock Margin="0,0,0,24" FontSize="16" FontWeight="Bold">Edufocal Certificate Generator</TextBlock>
-            <TextBlock Margin="0,0,0,4">User Map</TextBlock>
+            <TextBlock Margin="0,0,0,4">Employee Info Key</TextBlock>
             <TextBox x:Name="FilePathTextBox" Margin="0,0,0,4" IsReadOnly="True" Text="{Binding FileName, UpdateSourceTrigger=PropertyChanged}"/>
-            <Button Content="Upload" Command="{Binding UploadUserMapCommand}" Margin="0,0,0,4"/>
-            <TextBlock Margin="0,16,0,4">User Alias</TextBlock>
-            <TextBox x:Name="UserAliasTextBox" Margin="0,0,0,4" Text="{Binding UserAlias, UpdateSourceTrigger=PropertyChanged}"/>
+            <Button Content="Upload" Command="{Binding UploadEmployeeMapCommand}" Margin="0,0,0,4"/>
+            <TextBlock Margin="0,16,0,4">Alias Email</TextBlock>
+            <TextBox x:Name="UserAliasTextBox" Margin="0,0,0,4" Text="{Binding AliasEmail, UpdateSourceTrigger=PropertyChanged}"/>
             <TextBlock Margin="0,16,0,4">Course Name</TextBlock>
             <TextBox x:Name="CourseNameTextBox" Margin="0,0,0,16" Text="{Binding CourseName, UpdateSourceTrigger=PropertyChanged}"/>
             <Button Content="Generate" Command="{Binding GenerateCertificateCommand}" Margin="0,16,0,0" HorizontalAlignment="Center" Width="100"/>

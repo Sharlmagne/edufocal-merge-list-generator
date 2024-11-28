@@ -12,9 +12,10 @@ namespace EdufocalCertificateGenerator.ViewModels;
 public class MainViewModel: ViewModel
 {
 
+    private string SECTION_NAME = "EmployeeMap";
     private string _mapFilePath;
     private string _fileName;
-    private string _userAlias;
+    private string _aliasEmail;
     private string _courseName;
 
 
@@ -38,12 +39,12 @@ public class MainViewModel: ViewModel
         }
     }
 
-    public string UserAlias
+    public string AliasEmail
     {
-        get => _userAlias;
+        get => _aliasEmail;
         set
         {
-            _userAlias = value;
+            _aliasEmail = value;
             OnPropertyChanged();
         }
     }
@@ -59,43 +60,52 @@ public class MainViewModel: ViewModel
     }
 
 
-    private Dictionary<string, UserInfo> _employees = new();
-    public ICommand UploadUserMapCommand { get; set; }
+    private Dictionary<string, EmployeeInfo> _employees = new();
+    public ICommand UploadEmployeeMapCommand { get; set; }
     public ICommand GenerateCertificateCommand { get; set; }
-    public ICommand RemoveUserMapCommand { get; set; }
+    public ICommand RemoveEmployeeMapCommand { get; set; }
 
     public MainViewModel(Configuration AppConfig)
     {
-        UploadUserMapCommand = new RelayCommand(UploadUserMapExecute, CanUploadUserMap);
+        UploadEmployeeMapCommand = new RelayCommand(UploadEmployeeMapExecute, CanUploadEmployeeMap);
         GenerateCertificateCommand = new RelayCommand(GenerateCertificateExecute, CanGenerateCertificate);
-        RemoveUserMapCommand = new RelayCommand(RemoveUserMapExecute, CanRemoveUserMap);
+        RemoveEmployeeMapCommand = new RelayCommand(RemoveEmployeeMapExecute, CanRemoveEmployeeMap);
 
-
-        if (AppConfig.Sections["UserMap"] is null)
-        {
-            AppConfig.Sections.Add("UserMap", new UserMapSection());
-            AppConfig.Save(ConfigurationSaveMode.Modified);
-        }
-        else
-        {
-            var userMap = (UserMapSection)AppConfig.Sections["UserMap"];
-            MapFilePath = userMap.MapFilePath;
-            FileName = userMap.FileName;
-        }
+        SetAppConfig(AppConfig);
 
         // Read Document and generate list of employees
         if (!string.IsNullOrEmpty(MapFilePath))
         {
-            var employees = new UserMap();
-            var document = new DocumentReader(MapFilePath);
-            document.GenerateList(employees);
-            _employees = employees.Employees;
+            LoadEmployeeMap();
         }
     }
 
-    private void UploadUserMapExecute(object obj)
+    private void SetAppConfig(Configuration AppConfig)
     {
-        Console.WriteLine("Upload User Map");
+        if (AppConfig.Sections[SECTION_NAME] is null)
+        {
+            Console.WriteLine("There is no Employee Map");
+            AppConfig.Sections.Add(SECTION_NAME, new EmployeeMapSection());
+            AppConfig.Save(ConfigurationSaveMode.Modified);
+        }
+        else
+        {
+            var userMap = (EmployeeMapSection)AppConfig.Sections[SECTION_NAME];
+            MapFilePath = userMap.MapFilePath;
+            FileName = userMap.FileName;
+        }
+    }
+
+    private void LoadEmployeeMap()
+    {
+        var employees = new EmployeeMap();
+        var document = new DocumentReader(MapFilePath);
+        document.GenerateList(employees);
+        _employees = employees.Employees;
+    }
+
+    private void UploadEmployeeMapExecute(object obj)
+    {
         var dialog = new OpenFileDialog
         {
             Filter = "Excel files (*.xlsx;*.xls)|*.xlsx;*.xls|CSV files (*.csv)|*.csv"
@@ -109,53 +119,54 @@ public class MainViewModel: ViewModel
 
             var AppConfig = App.Services.GetRequiredService<Configuration>();
 
-            var userMap = (UserMapSection)AppConfig.Sections["UserMap"];
+            var userMap = (EmployeeMapSection)AppConfig.Sections[SECTION_NAME];
             userMap.MapFilePath = MapFilePath;
             userMap.FileName = FileName;
             AppConfig.Save(ConfigurationSaveMode.Modified);
+
+            LoadEmployeeMap();
         }
     }
 
-    private void RemoveUserMapExecute(object obj)
+    private void RemoveEmployeeMapExecute(object obj)
     {
         Console.WriteLine("Remove User Map");
         MapFilePath = "";
         FileName = "";
 
         var AppConfig = App.Services.GetRequiredService<Configuration>();
-        var userMap = (UserMapSection)AppConfig.Sections["UserMap"];
+        var EmployeeMap = (EmployeeMapSection)AppConfig.Sections[SECTION_NAME];
 
-        userMap.MapFilePath = MapFilePath;
-        userMap.FileName = FileName;
+        EmployeeMap.MapFilePath = MapFilePath;
+        EmployeeMap.FileName = FileName;
 
         AppConfig.Save(ConfigurationSaveMode.Modified);
     }
 
-    private bool CanRemoveUserMap(object obj)
+    private bool CanRemoveEmployeeMap(object obj)
     {
         return !string.IsNullOrEmpty(MapFilePath);
     }
-
-    private bool CanUploadUserMap(object obj)
+    private bool CanUploadEmployeeMap(object obj)
     {
         return true;
     }
 
     private void GenerateCertificateExecute(object obj)
     {
-        if (!_employees.ContainsKey(UserAlias))
+        if (!_employees.ContainsKey(AliasEmail))
         {
             Console.WriteLine("User not found");
         } else
         {
-            Console.WriteLine($"Generate Certificate for {_employees[UserAlias].FirstName} {_employees[UserAlias].LastName} - {CourseName}");
+            Console.WriteLine($"Generate Certificate for {_employees[AliasEmail].FirstName} {_employees[AliasEmail].LastName} - {CourseName}");
         }
     }
 
     private bool CanGenerateCertificate(object obj)
     {
         // Check if all fields are filled
-        if (string.IsNullOrEmpty(UserAlias) || string.IsNullOrEmpty(MapFilePath) || string.IsNullOrEmpty(CourseName))
+        if (string.IsNullOrEmpty(AliasEmail) || string.IsNullOrEmpty(MapFilePath) || string.IsNullOrEmpty(CourseName))
         {
             return false;
         }

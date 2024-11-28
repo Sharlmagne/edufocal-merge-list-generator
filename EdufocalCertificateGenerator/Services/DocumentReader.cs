@@ -14,7 +14,7 @@ public class DocumentReader
         Document = document;
     }
 
-    public void GenerateList(UserMap employees)
+    public void GenerateList(EmployeeMap employees)
     {
         Worksheet worksheet = Document.Workbook.Worksheets.ByName("Sheet1");
 
