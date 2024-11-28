@@ -1,4 +1,5 @@
 ﻿
+using System.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System.Windows;
 using EdufocalCertificateGenerator.ViewModels;
@@ -13,6 +14,10 @@ public partial class App : Application
     public App()
     {
         IServiceCollection services = new ServiceCollection();
+
+        // Register configuration
+        var config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
+        services.AddSingleton(config);
 
         // Window Views
         services.AddSingleton<MainWindow>();
