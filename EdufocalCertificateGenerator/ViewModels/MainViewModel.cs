@@ -160,6 +160,13 @@ public class MainViewModel: ViewModel
         } else
         {
             Console.WriteLine($"Generate Certificate for {_employees[AliasEmail].FirstName} {_employees[AliasEmail].LastName} - {CourseName}");
+            DocumentEditor.EditWordDocument(
+                Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "boj_certificate_template.docx"),
+                _employees[AliasEmail].FirstName + " " + _employees[AliasEmail].LastName,
+                CourseName,
+                "Module Completion",
+                "Date Awarded"
+            );
         }
     }
 
@@ -178,6 +185,4 @@ public class MainViewModel: ViewModel
     {
         return Path.GetFileName(filePath);
     }
-
-
 }
