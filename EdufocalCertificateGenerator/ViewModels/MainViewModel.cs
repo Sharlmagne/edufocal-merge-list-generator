@@ -1,5 +1,6 @@
 ﻿using System.Configuration;
 using System.IO;
+using System.Windows;
 using System.Windows.Input;
 using EdufocalCertificateGenerator.Models;
 using EdufocalCertificateGenerator.Services;
@@ -13,10 +14,12 @@ public class MainViewModel: ViewModel
 {
 
     private string SECTION_NAME = "EmployeeMap";
+    private string appDirectory = AppDomain.CurrentDomain.BaseDirectory;
     private string _mapFilePath;
     private string _fileName;
     private string _aliasEmail;
     private string _courseName;
+    private string _dateAwarded;
 
 
     public string FileName
@@ -55,6 +58,16 @@ public class MainViewModel: ViewModel
         set
         {
             _courseName = value;
+            OnPropertyChanged();
+        }
+    }
+
+    public string DateAwarded
+    {
+        get => _dateAwarded;
+        set
+        {
+            _dateAwarded = value;
             OnPropertyChanged();
         }
     }
@@ -154,18 +167,24 @@ public class MainViewModel: ViewModel
 
     private void GenerateCertificateExecute(object obj)
     {
-        if (!_employees.ContainsKey(AliasEmail))
+        if (!_employees.TryGetValue(AliasEmail, out var value))
         {
-            Console.WriteLine("User not found");
+            MessageBox.Show("User not found", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
         } else
         {
-            Console.WriteLine($"Generate Certificate for {_employees[AliasEmail].FirstName} {_employees[AliasEmail].LastName} - {CourseName}");
+            // Format Date
+            DateTime date = DateTime.Parse(DateAwarded);
+            string formattedDate = date.ToString("MMM. d, yyyy");
+
+            // Template Path
+            string templatePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Resources", "boj_certificate_template.docx");
+
             DocumentEditor.EditWordDocument(
-                Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "boj_certificate_template.docx"),
-                _employees[AliasEmail].FirstName + " " + _employees[AliasEmail].LastName,
+               templatePath,
+value.FirstName + " " + value.LastName,
                 CourseName,
-                "Module Completion",
-                "Date Awarded"
+                "",
+                formattedDate
             );
         }
     }
@@ -173,12 +192,7 @@ public class MainViewModel: ViewModel
     private bool CanGenerateCertificate(object obj)
     {
         // Check if all fields are filled
-        if (string.IsNullOrEmpty(AliasEmail) || string.IsNullOrEmpty(MapFilePath) || string.IsNullOrEmpty(CourseName))
-        {
-            return false;
-        }
-
-        return true;
+        return !string.IsNullOrEmpty(AliasEmail) && !string.IsNullOrEmpty(MapFilePath) && !string.IsNullOrEmpty(CourseName) && !string.IsNullOrEmpty(DateAwarded);
     }
 
     private string GetFileName(string filePath)

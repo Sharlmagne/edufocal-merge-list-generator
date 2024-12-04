@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:EdufocalCertificateGenerator"
         xmlns:system="clr-namespace:System;assembly=System.Runtime"
         mc:Ignorable="d"
-        Title="EdufocalCG" Height="400" Width="360">
+        Title="Edufocal Certificate Generator" Height="450" Width="360">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="24"/>
@@ -26,7 +26,9 @@
             <TextBlock Margin="0,16,0,4">Alias Email</TextBlock>
             <TextBox x:Name="UserAliasTextBox" Margin="0,0,0,4" Text="{Binding AliasEmail, UpdateSourceTrigger=PropertyChanged}"/>
             <TextBlock Margin="0,16,0,4">Course Name</TextBlock>
-            <TextBox x:Name="CourseNameTextBox" Margin="0,0,0,16" Text="{Binding CourseName, UpdateSourceTrigger=PropertyChanged}"/>
+            <TextBox x:Name="CourseNameTextBox" Margin="0,0,0,4" Text="{Binding CourseName, UpdateSourceTrigger=PropertyChanged}"/>
+            <TextBlock Margin="0,16,0,4">Date Awarded</TextBlock>
+            <DatePicker x:Name="DateAwardedPicker" Margin="0,0,0,4" SelectedDate="{Binding DateAwarded, UpdateSourceTrigger=PropertyChanged}"/>
             <Button Content="Generate" Command="{Binding GenerateCertificateCommand}" Margin="0,16,0,0" HorizontalAlignment="Center" Width="100"/>
         </StackPanel>
     </Grid>
