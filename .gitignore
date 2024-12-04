@@ -1,5 +1,35 @@
+# Build Folders
 bin/
 obj/
-/packages/
-riderModule.iml
+
+# Rider project files
+/.idea/
 /_ReSharper.Caches/
+*.sln.iml
+
+# User-specific files
+*.rsuser
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Mono Auto Generated Files
+mono_crash.*
+
+# Windows image file caches
+Thumbs.db
+ehthumbs.db
+
+# Folder config file
+Desktop.ini
+
+# Recycle Bin used on file shares
+$RECYCLE.BIN/
+
+# VS Code directories
+.vscode/
+.vscode-test/
+
+# Rider directories
+.idea/
