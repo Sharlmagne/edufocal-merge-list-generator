@@ -183,21 +183,13 @@ public class MainViewModel: ViewModel
     private void RemoveEmployeeMapExecute(object obj)
     {
         Console.WriteLine("Remove User Map");
-        MapFilePath = "";
-        FileName = "";
-
-        var AppConfig = App.Services.GetRequiredService<Configuration>();
-        var EmployeeMap = (EmployeeMapSection)AppConfig.Sections[SECTION_NAME];
-
-        EmployeeMap.MapFilePath = MapFilePath;
-        EmployeeMap.FileName = FileName;
-
-        AppConfig.Save(ConfigurationSaveMode.Modified);
+        ClearEmployeeMapPath();
     }
 
     private bool CanRemoveEmployeeMap(object obj)
     {
-        return !string.IsNullOrEmpty(MapFilePath);
+        // return !string.IsNullOrEmpty(MapFilePath);
+        return true;
     }
     private bool CanUploadEmployeeMap(object obj)
     {

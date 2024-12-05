@@ -22,7 +22,25 @@
             <TextBlock Margin="0,0,0,24" FontSize="16" FontWeight="Bold">EduFocal Certificate Generator</TextBlock>
             <TextBlock Margin="0,0,0,4">Employee Info Key</TextBlock>
             <TextBox x:Name="FilePathTextBox" Margin="0,0,0,4" IsReadOnly="True" Text="{Binding FileName, UpdateSourceTrigger=PropertyChanged}"/>
-            <Button Content="Upload" Command="{Binding UploadEmployeeMapCommand}" Margin="0,0,0,4"/>
+            <Button Margin="0,0,0,4">
+                <Button.Style>
+                    <Style TargetType="Button">
+                        <Setter Property="Content" Value="Remove File"/>
+                        <Setter Property="Background" Value="#ffab9e"/>
+                        <Setter Property="Command" Value="{Binding RemoveEmployeeMapCommand}" />
+                        <Style.Triggers>
+                            <MultiDataTrigger>
+                                <MultiDataTrigger.Conditions>
+                                    <Condition Binding="{Binding FileName}" Value=""/>
+                                </MultiDataTrigger.Conditions>
+                                <Setter Property="Content" Value="Upload File"/>
+                                <Setter Property="Background" Value="LightGray"/>
+                                <Setter Property="Command" Value="{Binding UploadEmployeeMapCommand}"/>
+                            </MultiDataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Button.Style>
+            </Button>
             <TextBlock Margin="0,16,0,4">Alias Email</TextBlock>
             <TextBox x:Name="UserAliasTextBox" Margin="0,0,0,4" Text="{Binding AliasEmail, UpdateSourceTrigger=PropertyChanged}"/>
             <TextBlock Margin="0,16,0,4">Course Name</TextBlock>
