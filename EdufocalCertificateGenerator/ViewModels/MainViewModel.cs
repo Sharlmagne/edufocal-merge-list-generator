@@ -2,11 +2,13 @@
 using System.IO;
 using System.Windows;
 using System.Windows.Input;
+using EdufocalCertificateGenerator.Exceptions;
 using EdufocalCertificateGenerator.Models;
 using EdufocalCertificateGenerator.Services;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Win32;
 using NISInspectorApp.Core;
+using FileNotFoundException = System.IO.FileNotFoundException;
 
 namespace EdufocalCertificateGenerator.ViewModels;
 
@@ -111,10 +113,47 @@ public class MainViewModel: ViewModel
 
     private void LoadEmployeeMap()
     {
-        var employees = new EmployeeMap();
-        var document = new DocumentReader(MapFilePath);
-        document.GenerateList(employees);
-        _employees = employees.Employees;
+        try
+        {
+            var employees = new EmployeeMap();
+            var document = new DocumentReader(MapFilePath);
+            document.GenerateList(employees);
+            _employees = employees.Employees;
+        }
+        catch (InvalidFileException ex)
+        {
+            MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            ClearEmployeeMapPath();
+        }
+        catch (FileNotFoundException ex)
+        {
+            MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+
+            // Clear the file path
+            ClearEmployeeMapPath();
+        }
+        catch (WorksheetNotFoundException ex)
+        {
+            MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            ClearEmployeeMapPath();
+        }
+        catch (Exception ex)
+        {
+            MessageBox.Show("An unexpected error occurred: " + ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            ClearEmployeeMapPath();
+        }
+    }
+
+    private void ClearEmployeeMapPath()
+    {
+        MapFilePath = "";
+        FileName = "";
+        var AppConfig = App.Services.GetRequiredService<Configuration>();
+
+        var userMap = (EmployeeMapSection)AppConfig.Sections[SECTION_NAME];
+        userMap.MapFilePath = MapFilePath;
+        userMap.FileName = FileName;
+        AppConfig.Save(ConfigurationSaveMode.Modified);
     }
 
     private void UploadEmployeeMapExecute(object obj)
@@ -167,9 +206,37 @@ public class MainViewModel: ViewModel
 
     private void GenerateCertificateExecute(object obj)
     {
+        // Check each field and display error message if empty
+        if (string.IsNullOrEmpty(MapFilePath))
+        {
+            MessageBox.Show("Please upload an employee map (The excel file with all the aliases and the corresponding company emails).", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            return;
+        }
+
+        if (string.IsNullOrEmpty(AliasEmail))
+        {
+            MessageBox.Show("Employee Alias email is required", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            return;
+        }
+
+        if (string.IsNullOrEmpty(CourseName))
+        {
+            MessageBox.Show("Course Name is required", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            return;
+        }
+
+        if (string.IsNullOrEmpty(DateAwarded))
+        {
+            MessageBox.Show("Date Awarded is required", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            return;
+        }
+
+
+
+
         if (!_employees.TryGetValue(AliasEmail, out var value))
         {
-            MessageBox.Show("User not found", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            MessageBox.Show("User not found: Check and update the excel file", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
         } else
         {
             // Format Date
@@ -192,7 +259,7 @@ value.FirstName + " " + value.LastName,
     private bool CanGenerateCertificate(object obj)
     {
         // Check if all fields are filled
-        return !string.IsNullOrEmpty(AliasEmail) && !string.IsNullOrEmpty(MapFilePath) && !string.IsNullOrEmpty(CourseName) && !string.IsNullOrEmpty(DateAwarded);
+        return true;
     }
 
     private string GetFileName(string filePath)
