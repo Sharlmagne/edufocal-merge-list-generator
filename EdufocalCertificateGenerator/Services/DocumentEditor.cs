@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using System.Windows;
 using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Wordprocessing;
 using Microsoft.Win32;
@@ -58,6 +59,8 @@ public static class DocumentEditor
         }
 
         wordDoc.MainDocumentPart.Document.Save();
+
+        MessageBox.Show("Certificate creation successful!", "Done", MessageBoxButton.OK, MessageBoxImage.Information);
     }
 
     private static SaveFileDialog SaveFileDialog(string fileName = "Certificate")
