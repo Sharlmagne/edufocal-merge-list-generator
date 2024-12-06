@@ -6,18 +6,19 @@
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
         <UseWPF>true</UseWPF>
+		<RuntimeIdentifier>win-x86</RuntimeIdentifier>
         <ApplicationIcon>Resources\edufocal.ico</ApplicationIcon>
     </PropertyGroup>
 
     <ItemGroup>
+      <Compile Remove=".github\**" />
       <Compile Remove="Util\**" />
+      <EmbeddedResource Remove=".github\**" />
       <EmbeddedResource Remove="Util\**" />
+      <None Remove=".github\**" />
       <None Remove="Util\**" />
+      <Page Remove=".github\**" />
       <Page Remove="Util\**" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <Content Include=".github\workflows\release.yml" />
     </ItemGroup>
 
     <ItemGroup>
