@@ -10,11 +10,14 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <Content Include=".github\workflows\release.yml" />
+      <Compile Remove="Util\**" />
+      <EmbeddedResource Remove="Util\**" />
+      <None Remove="Util\**" />
+      <Page Remove="Util\**" />
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Util\" />
+      <Content Include=".github\workflows\release.yml" />
     </ItemGroup>
 
     <ItemGroup>
