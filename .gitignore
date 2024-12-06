@@ -31,5 +31,8 @@ $RECYCLE.BIN/
 .vscode/
 .vscode-test/
 
+# Visual Studio directories
+.vs/
+
 # Rider directories
 .idea/

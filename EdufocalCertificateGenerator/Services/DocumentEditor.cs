@@ -39,22 +39,22 @@ public static class DocumentEditor
             if (text.Text.Contains(_employeeNameTag))
             {
                 text.Text = text.Text.Replace(_employeeNameTag, employeeName);
-                Console.WriteLine("Found Employee Name");
+                // Console.WriteLine("Found Employee Name");
             }
             if (text.Text.Contains(_courseTag))
             {
                 text.Text = text.Text.Replace(_courseTag, courseName);
-                Console.WriteLine("Found Course Name");
+                // Console.WriteLine("Found Course Name");
             }
             if (text.Text.Contains(_moduleCompletionTag))
             {
                 text.Text = text.Text.Replace(_moduleCompletionTag, moduleCompletion);
-                Console.WriteLine("Found Module Completion");
+                // Console.WriteLine("Found Module Completion");
             }
             if (text.Text.Contains(_dateAwardedTag))
             {
                 text.Text = text.Text.Replace(_dateAwardedTag, dateAwarded);
-                Console.WriteLine("Found Date Awarded");
+                // Console.WriteLine("Found Date Awarded");
             }
         }
 
