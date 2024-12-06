@@ -10,13 +10,15 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
+        with:
+          lfs: true
 
       - name: Setup Git
         run: |
           git config --global url."https://${{ secrets.GH_PAT }}@github".insteadOf https://github
           git config --global user.name github-actions
-          git config --global user.email github-actions@github.com          
+          git config --global user.email github-actions@github.com
 
       - name: Run release script
         shell: pwsh
