@@ -73,6 +73,10 @@ if (-Not (Test-Path $ghPagesDir)) {
 
 Push-Location $ghPagesDir
 try {
+    # Install Git LFS and pull LFS files.
+    git lfs install
+    git lfs pull
+
     # Remove previous application files.
     Write-Output "Removing previous files..."
     if (Test-Path "Application Files") {
