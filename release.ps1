@@ -5,8 +5,8 @@ param (
     [switch]$OnlyBuild=$false
 )
 
-$appName = "EdufocalCertificateGenerator" # 👈 Replace with your application project name.
-$projDir = "EdufocalCertificateGenerator" # 👈 Replace with your project directory (where .csproj resides).
+$appName = "EdufocalCertificateGenerator"
+$projDir = "EdufocalCertificateGenerator"
 
 Set-StrictMode -version 2.0
 $ErrorActionPreference = "Stop"
