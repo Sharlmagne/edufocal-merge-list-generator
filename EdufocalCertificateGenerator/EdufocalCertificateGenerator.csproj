@@ -10,6 +10,10 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <Content Include=".github\workflows\release.yml" />
+    </ItemGroup>
+
+    <ItemGroup>
       <Folder Include="Util\" />
     </ItemGroup>
 
