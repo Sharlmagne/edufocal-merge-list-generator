@@ -2,4 +2,4 @@
 * -text
 
 # Use Git LFS for the specified .exe.deploy files
-Application\ Files/EdufocalCertificateGenerator_*/EdufocalCertificateGenerator.exe.deploy filter=lfs diff=lfs merge=lfs -text
+Application\ Files/EdufocalMergeListGenerator_*/EdufocalMergeListGenerator.exe.deploy filter=lfs diff=lfs merge=lfs -text
