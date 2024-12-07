@@ -1,0 +1,5 @@
+# Disable automatic text file normalization
+* -text
+
+# Use Git LFS for the specified .exe.deploy files
+Application\ Files/EdufocalMergeListGenerator_*/EdufocalMergeListGenerator.exe.deploy filter=lfs diff=lfs merge=lfs -text
