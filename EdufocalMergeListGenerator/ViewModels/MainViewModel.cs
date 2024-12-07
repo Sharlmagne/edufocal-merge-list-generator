@@ -2,6 +2,7 @@
 using System.IO;
 using System.Windows;
 using System.Windows.Input;
+using Bytescout.Spreadsheet;
 using EdufocalMergeListGenerator.Exceptions;
 using EdufocalMergeListGenerator.Models;
 using EdufocalMergeListGenerator.Services;
@@ -62,8 +63,9 @@ public class MainViewModel: ViewModel
         }
     }
 
+    private Dictionary<string, EmployeeInfo> Employees { get; set; } = new();
+    private Worksheet AliasListWorksheet { get; set; }
 
-    private Dictionary<string, EmployeeInfo> _employees = new();
     public ICommand UploadEmployeesListCommand { get; set; }
     public ICommand RemoveEmployeesListCommand { get; set; }
     public ICommand UploadAliasListCommand { get; set; }
@@ -111,7 +113,7 @@ public class MainViewModel: ViewModel
             var employees = new EmployeesList();
             var document = new DocumentReader(EmployeesListFilePath);
             document.GenerateEmployeesList(employees);
-            _employees = employees.Employees;
+            Employees = employees.Employees;
         }
         catch (InvalidFileException ex)
         {
@@ -197,6 +199,39 @@ public class MainViewModel: ViewModel
 
             AliasListFilePath = dialog.FileName;
             AliasListFileName = GetFileName(AliasListFilePath);
+
+            try
+            {
+                var Document = new DocumentReader(AliasListFilePath);
+                Document.ValidateAliasList();
+                AliasListWorksheet = Document.Document.Workbook.Worksheets.ByName("Sheet1");
+            }
+            catch (InvalidFileException ex)
+            {
+                MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                ClearAliasListPath();
+            }
+            catch (FileNotFoundException ex)
+            {
+                MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                ClearAliasListPath();
+            }
+            catch (WorksheetNotFoundException ex)
+            {
+                MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                ClearAliasListPath();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("An unexpected error occurred: " + ex.Message, "Error", MessageBoxButton.OK,
+                    MessageBoxImage.Error);
+                ClearAliasListPath();
+            }
+            catch
+            {
+                MessageBox.Show("An unexpected error occurred", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                ClearAliasListPath();
+            }
         }
     }
 
@@ -208,7 +243,26 @@ public class MainViewModel: ViewModel
 
     private void GenerateMergeListExecute(object obj)
     {
-        Console.WriteLine("Generating Merge List");
+        if (string.IsNullOrEmpty(EmployeesListFilePath))
+        {
+            MessageBox.Show("Please upload the Employees List before generating the Merge List (The excel file with all the aliases and the corresponding company emails).", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            return;
+        }
+
+        if (string.IsNullOrEmpty(AliasListFilePath))
+        {
+            MessageBox.Show("Please upload the Alias List before generating the Merge List", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            return;
+        }
+
+        try
+        {
+            DocumentMerger.MergeDocuments(Employees, AliasListWorksheet);
+        }
+        catch (Exception ex)
+        {
+            MessageBox.Show("An unexpected error occurred: " + ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+        }
     }
 
     private string GetFileName(string filePath)

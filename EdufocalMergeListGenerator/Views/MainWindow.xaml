@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:EdufocalMergeListGenerator"
         xmlns:system="clr-namespace:System;assembly=System.Runtime"
         mc:Ignorable="d"
-        Title="EduFocal Merge List Generator" Height="360" Width="360">
+        Title="EduFocal Merge List Generator" Height="360" Width="480">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="24"/>
@@ -18,14 +18,14 @@
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="24"/>
         </Grid.ColumnDefinitions>
-        <StackPanel Grid.Row="1" Grid.Column="1" Width="280" HorizontalAlignment="Center">
+        <StackPanel Grid.Row="1" Grid.Column="1" Width="400" HorizontalAlignment="Center">
             <TextBlock Margin="0,0,0,24" FontSize="16" FontWeight="Bold">EduFocal Merge List Generator</TextBlock>
             <TextBlock Margin="0,0,0,4">Employees List</TextBlock>
             <TextBox x:Name="FilePathTextBox" Margin="0,0,0,4" IsReadOnly="True" Text="{Binding EmployeesListFileName, UpdateSourceTrigger=PropertyChanged}"/>
             <Button Margin="0,0,0,8">
                 <Button.Style>
                     <Style TargetType="Button">
-                        <Setter Property="Content" Value="Upload File"/>
+                        <Setter Property="Content" Value="Upload Employees List"/>
                         <Setter Property="Background" Value="LightGray"/>
                         <Setter Property="Command" Value="{Binding UploadEmployeesListCommand}"/>
                         <Style.Triggers>
@@ -40,7 +40,7 @@
             </Button>
             <TextBlock Margin="0,0,0,4">Employees Alias List</TextBlock>
             <TextBox x:Name="AliasListFilePathTextBox" Margin="0,0,0,4" IsReadOnly="True" Text="{Binding AliasListFileName, UpdateSourceTrigger=PropertyChanged}"/>
-            <Button Margin="0,0,0,8">
+            <Button Margin="0,0,0,16">
                 <Button.Style>
                     <Style TargetType="Button">
                         <Setter Property="Content" Value="Upload Alias List"/>
@@ -56,7 +56,10 @@
                     </Style>
                 </Button.Style>
             </Button>
-            <Button Content="Generate Mail Merge List" Command="{Binding GenerateMergeListCommand}" Margin="0,16,0,0" HorizontalAlignment="Center" Width="150"/>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,16,0,0">
+                <Button Content="Download Certificate Template" Command="{Binding DownloadCertificateTemplateCommand}" Height="30" Width="180" Background="#1187B7" Foreground="White"/>
+                <Button Content="Generate Mail Merge List" Command="{Binding GenerateMergeListCommand}" Margin="16,0,0,0" Height="30" Width="150" Background="#A46DAC" Foreground="White"/>
+            </StackPanel>
         </StackPanel>
     </Grid>
 </Window>
