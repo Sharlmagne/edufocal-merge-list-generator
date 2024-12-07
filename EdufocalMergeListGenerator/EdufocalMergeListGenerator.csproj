@@ -8,6 +8,7 @@
         <UseWPF>true</UseWPF>
         <RuntimeIdentifiers>win-x86;win-x64</RuntimeIdentifiers>
         <ApplicationIcon>Resources\edufocal.ico</ApplicationIcon>
+        <RootNamespace>EdufocalCertificateGenerator</RootNamespace>
     </PropertyGroup>
 
     <ItemGroup>

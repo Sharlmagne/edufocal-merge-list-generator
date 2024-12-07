@@ -5,8 +5,8 @@ param (
     [switch]$OnlyBuild=$false
 )
 
-$appName = "EdufocalCertificateGenerator"
-$projDir = "EdufocalCertificateGenerator"
+$appName = "EdufocalMergeListGenerator"
+$projDir = "EdufocalMergeListGenerator"
 
 Set-StrictMode -version 2.0
 $ErrorActionPreference = "Stop"

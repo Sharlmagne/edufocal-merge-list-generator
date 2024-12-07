@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.11.35222.181
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EdufocalCertificateGenerator", "EdufocalCertificateGenerator\EdufocalCertificateGenerator.csproj", "{2121339E-33D3-4281-BB19-B93B1E1718EA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EdufocalMergeListGenerator", "EdufocalMergeListGenerator\EdufocalMergeListGenerator.csproj", "{2121339E-33D3-4281-BB19-B93B1E1718EA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
