@@ -1,10 +1,10 @@
-﻿namespace EdufocalCertificateGenerator.Models;
+﻿namespace EdufocalMergeListGenerator.Models;
 
-public class EmployeeMap
+public class EmployeesList
 {
     public Dictionary<string, EmployeeInfo> Employees { get; set; }
 
-    public EmployeeMap()
+    public EmployeesList()
     {
         Employees = new Dictionary<string, EmployeeInfo>();
     }

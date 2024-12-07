@@ -2,10 +2,10 @@
 using System.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System.Windows;
-using EdufocalCertificateGenerator.ViewModels;
+using EdufocalMergeListGenerator.ViewModels;
 using NISInspectorApp.Core;
 
-namespace EdufocalCertificateGenerator;
+namespace EdufocalMergeListGenerator;
 
 public partial class App : Application
 {

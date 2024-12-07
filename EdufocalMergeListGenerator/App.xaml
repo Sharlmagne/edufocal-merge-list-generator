@@ -1,11 +1,13 @@
-﻿<Application x:Class="EdufocalCertificateGenerator.App"
+﻿<Application x:Class="EdufocalMergeListGenerator.App"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:local="clr-namespace:EdufocalCertificateGenerator"
-             xmlns:viewModel="clr-namespace:EdufocalCertificateGenerator.ViewModels">
+             xmlns:util="clr-namespace:EdufocalMergeListGenerator.Util"
+             xmlns:viewModels="clr-namespace:EdufocalMergeListGenerator.ViewModels"
+             xmlns:edufocalMergeListGenerator="clr-namespace:EdufocalMergeListGenerator">
     <Application.Resources>
-        <DataTemplate DataType="{x:Type TypeName=viewModel:MainViewModel}">
-            <local:MainWindow/>
+        <util:StringIsNotNullOrEmptyConverter x:Key="StringIsNotNullOrEmptyConverter"/>
+        <DataTemplate DataType="{x:Type TypeName=viewModels:MainViewModel}">
+            <edufocalMergeListGenerator:MainWindow/>
         </DataTemplate>
     </Application.Resources>
 </Application>

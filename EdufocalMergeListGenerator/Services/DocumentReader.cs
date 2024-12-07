@@ -1,10 +1,10 @@
 ﻿using System.IO;
 using Bytescout.Spreadsheet;
-using EdufocalCertificateGenerator.Exceptions;
-using EdufocalCertificateGenerator.Models;
+using EdufocalMergeListGenerator.Exceptions;
+using EdufocalMergeListGenerator.Models;
 using FileNotFoundException = System.IO.FileNotFoundException;
 
-namespace EdufocalCertificateGenerator.Services;
+namespace EdufocalMergeListGenerator.Services;
 
 public class DocumentReader
 {
@@ -22,7 +22,7 @@ public class DocumentReader
         Document = document;
     }
 
-    public void GenerateList(EmployeeMap employees)
+    public void GenerateEmployeesList(EmployeesList employees)
     {
         if (string.IsNullOrEmpty(Document?.Workbook?.Worksheets?.ByName("Sheet1")?.Name))
         {

@@ -1,12 +1,12 @@
-﻿<Window x:Class="EdufocalCertificateGenerator.MainWindow"
+﻿<Window x:Class="EdufocalMergeListGenerator.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:EdufocalCertificateGenerator"
+        xmlns:local="clr-namespace:EdufocalMergeListGenerator"
         xmlns:system="clr-namespace:System;assembly=System.Runtime"
         mc:Ignorable="d"
-        Title="EduFocal Certificate Generator" Height="450" Width="360">
+        Title="EduFocal Merge List Generator" Height="360" Width="360">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="24"/>
@@ -19,35 +19,44 @@
             <ColumnDefinition Width="24"/>
         </Grid.ColumnDefinitions>
         <StackPanel Grid.Row="1" Grid.Column="1" Width="280" HorizontalAlignment="Center">
-            <TextBlock Margin="0,0,0,24" FontSize="16" FontWeight="Bold">EduFocal Certificate Generator</TextBlock>
-            <TextBlock Margin="0,0,0,4">Employee Info Key</TextBlock>
-            <TextBox x:Name="FilePathTextBox" Margin="0,0,0,4" IsReadOnly="True" Text="{Binding FileName, UpdateSourceTrigger=PropertyChanged}"/>
-            <Button Margin="0,0,0,4">
+            <TextBlock Margin="0,0,0,24" FontSize="16" FontWeight="Bold">EduFocal Merge List Generator</TextBlock>
+            <TextBlock Margin="0,0,0,4">Employees List</TextBlock>
+            <TextBox x:Name="FilePathTextBox" Margin="0,0,0,4" IsReadOnly="True" Text="{Binding EmployeesListFileName, UpdateSourceTrigger=PropertyChanged}"/>
+            <Button Margin="0,0,0,8">
                 <Button.Style>
                     <Style TargetType="Button">
-                        <Setter Property="Content" Value="Remove File"/>
-                        <Setter Property="Background" Value="#ffab9e"/>
-                        <Setter Property="Command" Value="{Binding RemoveEmployeeMapCommand}" />
+                        <Setter Property="Content" Value="Upload File"/>
+                        <Setter Property="Background" Value="LightGray"/>
+                        <Setter Property="Command" Value="{Binding UploadEmployeesListCommand}"/>
                         <Style.Triggers>
-                            <MultiDataTrigger>
-                                <MultiDataTrigger.Conditions>
-                                    <Condition Binding="{Binding FileName}" Value=""/>
-                                </MultiDataTrigger.Conditions>
-                                <Setter Property="Content" Value="Upload File"/>
-                                <Setter Property="Background" Value="LightGray"/>
-                                <Setter Property="Command" Value="{Binding UploadEmployeeMapCommand}"/>
-                            </MultiDataTrigger>
+                            <DataTrigger Binding="{Binding EmployeesListFileName, Converter={StaticResource StringIsNotNullOrEmptyConverter}}" Value="True">
+                                <Setter Property="Content" Value="Remove Employees List"/>
+                                <Setter Property="Background" Value="#ffab9e"/>
+                                <Setter Property="Command" Value="{Binding RemoveEmployeesListCommand}"/>
+                            </DataTrigger>
                         </Style.Triggers>
                     </Style>
                 </Button.Style>
             </Button>
-            <TextBlock Margin="0,16,0,4">Alias Email</TextBlock>
-            <TextBox x:Name="UserAliasTextBox" Margin="0,0,0,4" Text="{Binding AliasEmail, UpdateSourceTrigger=PropertyChanged}"/>
-            <TextBlock Margin="0,16,0,4">Course Name</TextBlock>
-            <TextBox x:Name="CourseNameTextBox" Margin="0,0,0,4" Text="{Binding CourseName, UpdateSourceTrigger=PropertyChanged}"/>
-            <TextBlock Margin="0,16,0,4">Date Awarded</TextBlock>
-            <DatePicker x:Name="DateAwardedPicker" Margin="0,0,0,4" SelectedDate="{Binding DateAwarded, UpdateSourceTrigger=PropertyChanged}"/>
-            <Button Content="Generate" Command="{Binding GenerateCertificateCommand}" Margin="0,16,0,0" HorizontalAlignment="Center" Width="100"/>
+            <TextBlock Margin="0,0,0,4">Employees Alias List</TextBlock>
+            <TextBox x:Name="AliasListFilePathTextBox" Margin="0,0,0,4" IsReadOnly="True" Text="{Binding AliasListFileName, UpdateSourceTrigger=PropertyChanged}"/>
+            <Button Margin="0,0,0,8">
+                <Button.Style>
+                    <Style TargetType="Button">
+                        <Setter Property="Content" Value="Upload Alias List"/>
+                        <Setter Property="Background" Value="LightGray"/>
+                        <Setter Property="Command" Value="{Binding UploadAliasListCommand}"/>
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding AliasListFileName, Converter={StaticResource StringIsNotNullOrEmptyConverter}}" Value="True">
+                                <Setter Property="Content" Value="Remove Alias List"/>
+                                <Setter Property="Background" Value="#ffab9e"/>
+                                <Setter Property="Command" Value="{Binding RemoveAliasListCommand}"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Button.Style>
+            </Button>
+            <Button Content="Generate Mail Merge List" Command="{Binding GenerateMergeListCommand}" Margin="0,16,0,0" HorizontalAlignment="Center" Width="150"/>
         </StackPanel>
     </Grid>
 </Window>

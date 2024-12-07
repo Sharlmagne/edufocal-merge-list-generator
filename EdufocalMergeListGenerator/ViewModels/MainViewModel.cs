@@ -2,94 +2,87 @@
 using System.IO;
 using System.Windows;
 using System.Windows.Input;
-using EdufocalCertificateGenerator.Exceptions;
-using EdufocalCertificateGenerator.Models;
-using EdufocalCertificateGenerator.Services;
+using EdufocalMergeListGenerator.Exceptions;
+using EdufocalMergeListGenerator.Models;
+using EdufocalMergeListGenerator.Services;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Win32;
 using NISInspectorApp.Core;
 using FileNotFoundException = System.IO.FileNotFoundException;
 
-namespace EdufocalCertificateGenerator.ViewModels;
+namespace EdufocalMergeListGenerator.ViewModels;
 
 public class MainViewModel: ViewModel
 {
 
-    private string SECTION_NAME = "EmployeeMap";
+    private string SECTION_NAME = "EmployeesList";
     private string appDirectory = AppDomain.CurrentDomain.BaseDirectory;
-    private string _mapFilePath;
-    private string _fileName;
-    private string _aliasEmail;
-    private string _courseName;
-    private string _dateAwarded;
+    private string _employeesListFilePath;
+    private string _employeesListFileName;
+    private string _aliasListFilePath;
+    private string _aliasListFileName;
 
-
-    public string FileName
+    public string EmployeesListFileName
     {
-        get => _fileName;
+        get => _employeesListFileName;
         set
         {
-            _fileName = value;
+            _employeesListFileName = value;
             OnPropertyChanged();
         }
     }
 
-    private string MapFilePath
+    private string EmployeesListFilePath
     {
-        get => _mapFilePath;
+        get => _employeesListFilePath;
         set
         {
-            _mapFilePath = value;
+            _employeesListFilePath = value;
             OnPropertyChanged();
         }
     }
 
-    public string AliasEmail
+    public string AliasListFileName
     {
-        get => _aliasEmail;
+        get => _aliasListFileName;
         set
         {
-            _aliasEmail = value;
+            _aliasListFileName = value;
             OnPropertyChanged();
         }
     }
 
-    public string CourseName
+    private string AliasListFilePath
     {
-        get => _courseName;
+        get => _aliasListFilePath;
         set
         {
-            _courseName = value;
-            OnPropertyChanged();
-        }
-    }
-
-    public string DateAwarded
-    {
-        get => _dateAwarded;
-        set
-        {
-            _dateAwarded = value;
+            _aliasListFilePath = value;
             OnPropertyChanged();
         }
     }
 
 
     private Dictionary<string, EmployeeInfo> _employees = new();
-    public ICommand UploadEmployeeMapCommand { get; set; }
-    public ICommand GenerateCertificateCommand { get; set; }
-    public ICommand RemoveEmployeeMapCommand { get; set; }
+    public ICommand UploadEmployeesListCommand { get; set; }
+    public ICommand RemoveEmployeesListCommand { get; set; }
+    public ICommand UploadAliasListCommand { get; set; }
+    public ICommand RemoveAliasListCommand { get; set; }
+    public ICommand GenerateMergeListCommand { get; set; }
+
 
     public MainViewModel(Configuration AppConfig)
     {
-        UploadEmployeeMapCommand = new RelayCommand(UploadEmployeeMapExecute, CanUploadEmployeeMap);
-        GenerateCertificateCommand = new RelayCommand(GenerateCertificateExecute, CanGenerateCertificate);
-        RemoveEmployeeMapCommand = new RelayCommand(RemoveEmployeeMapExecute, CanRemoveEmployeeMap);
+        UploadEmployeesListCommand = new RelayCommand(UploadEmployeesListExecute, _ => true);
+        RemoveEmployeesListCommand = new RelayCommand(RemoveEmployeesListExecute, _ => true);
+        UploadAliasListCommand = new RelayCommand(UploadAliasListExecute, _ => true);
+        RemoveAliasListCommand = new RelayCommand(RemoveAliasListExecute, _ => true);
+        GenerateMergeListCommand = new RelayCommand(GenerateMergeListExecute, _ => true);
 
         SetAppConfig(AppConfig);
 
         // Read Document and generate list of employees
-        if (!string.IsNullOrEmpty(MapFilePath))
+        if (!string.IsNullOrEmpty(EmployeesListFilePath))
         {
             LoadEmployeeMap();
         }
@@ -100,14 +93,14 @@ public class MainViewModel: ViewModel
         if (AppConfig.Sections[SECTION_NAME] is null)
         {
             Console.WriteLine("There is no Employee Map");
-            AppConfig.Sections.Add(SECTION_NAME, new EmployeeMapSection());
+            AppConfig.Sections.Add(SECTION_NAME, new EmployeesListSection());
             AppConfig.Save(ConfigurationSaveMode.Modified);
         }
         else
         {
-            var userMap = (EmployeeMapSection)AppConfig.Sections[SECTION_NAME];
-            MapFilePath = userMap.MapFilePath;
-            FileName = userMap.FileName;
+            var userMap = (EmployeesListSection)AppConfig.Sections[SECTION_NAME];
+            EmployeesListFilePath = userMap.MapFilePath;
+            EmployeesListFileName = userMap.FileName;
         }
     }
 
@@ -115,48 +108,54 @@ public class MainViewModel: ViewModel
     {
         try
         {
-            var employees = new EmployeeMap();
-            var document = new DocumentReader(MapFilePath);
-            document.GenerateList(employees);
+            var employees = new EmployeesList();
+            var document = new DocumentReader(EmployeesListFilePath);
+            document.GenerateEmployeesList(employees);
             _employees = employees.Employees;
         }
         catch (InvalidFileException ex)
         {
             MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-            ClearEmployeeMapPath();
+            ClearEmployeesListPath();
         }
         catch (FileNotFoundException ex)
         {
             MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
 
             // Clear the file path
-            ClearEmployeeMapPath();
+            ClearEmployeesListPath();
         }
         catch (WorksheetNotFoundException ex)
         {
             MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-            ClearEmployeeMapPath();
+            ClearEmployeesListPath();
         }
         catch (Exception ex)
         {
             MessageBox.Show("An unexpected error occurred: " + ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-            ClearEmployeeMapPath();
+            ClearEmployeesListPath();
         }
     }
 
-    private void ClearEmployeeMapPath()
+    private void ClearEmployeesListPath()
     {
-        MapFilePath = "";
-        FileName = "";
+        EmployeesListFilePath = "";
+        EmployeesListFileName = "";
         var AppConfig = App.Services.GetRequiredService<Configuration>();
 
-        var userMap = (EmployeeMapSection)AppConfig.Sections[SECTION_NAME];
-        userMap.MapFilePath = MapFilePath;
-        userMap.FileName = FileName;
+        var userMap = (EmployeesListSection)AppConfig.Sections[SECTION_NAME];
+        userMap.MapFilePath = EmployeesListFilePath;
+        userMap.FileName = EmployeesListFileName;
         AppConfig.Save(ConfigurationSaveMode.Modified);
     }
 
-    private void UploadEmployeeMapExecute(object obj)
+    private void ClearAliasListPath()
+    {
+        AliasListFilePath = "";
+        AliasListFileName = "";
+    }
+
+    private void UploadEmployeesListExecute(object obj)
     {
         var dialog = new OpenFileDialog
         {
@@ -166,92 +165,50 @@ public class MainViewModel: ViewModel
         if (dialog.ShowDialog() == true)
         {
 
-            MapFilePath = dialog.FileName;
-            FileName = GetFileName(MapFilePath);
+            EmployeesListFilePath = dialog.FileName;
+            EmployeesListFileName = GetFileName(EmployeesListFilePath);
 
             var AppConfig = App.Services.GetRequiredService<Configuration>();
 
-            var userMap = (EmployeeMapSection)AppConfig.Sections[SECTION_NAME];
-            userMap.MapFilePath = MapFilePath;
-            userMap.FileName = FileName;
+            var userMap = (EmployeesListSection)AppConfig.Sections[SECTION_NAME];
+            userMap.MapFilePath = EmployeesListFilePath;
+            userMap.FileName = EmployeesListFileName;
             AppConfig.Save(ConfigurationSaveMode.Modified);
 
             LoadEmployeeMap();
         }
     }
 
-    private void RemoveEmployeeMapExecute(object obj)
+    private void RemoveEmployeesListExecute(object obj)
     {
         Console.WriteLine("Remove User Map");
-        ClearEmployeeMapPath();
+        ClearEmployeesListPath();
     }
 
-    private bool CanRemoveEmployeeMap(object obj)
+    private void UploadAliasListExecute(object obj)
     {
-        // return !string.IsNullOrEmpty(MapFilePath);
-        return true;
-    }
-    private bool CanUploadEmployeeMap(object obj)
-    {
-        return true;
-    }
-
-    private void GenerateCertificateExecute(object obj)
-    {
-        // Check each field and display error message if empty
-        if (string.IsNullOrEmpty(MapFilePath))
+        var dialog = new OpenFileDialog
         {
-            MessageBox.Show("Please upload an employee map (The excel file with all the aliases and the corresponding company emails).", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-            return;
-        }
+            Filter = "Excel files (*.xlsx;*.xls)|*.xlsx;*.xls|CSV files (*.csv)|*.csv"
+        };
 
-        if (string.IsNullOrEmpty(AliasEmail))
+        if (dialog.ShowDialog() == true)
         {
-            MessageBox.Show("Employee Alias email is required", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-            return;
-        }
 
-        if (string.IsNullOrEmpty(CourseName))
-        {
-            MessageBox.Show("Course Name is required", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-            return;
-        }
-
-        if (string.IsNullOrEmpty(DateAwarded))
-        {
-            MessageBox.Show("Date Awarded is required", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-            return;
-        }
-
-
-
-
-        if (!_employees.TryGetValue(AliasEmail, out var value))
-        {
-            MessageBox.Show("User not found: Check and update the excel file", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-        } else
-        {
-            // Format Date
-            DateTime date = DateTime.Parse(DateAwarded);
-            string formattedDate = date.ToString("MMM. d, yyyy");
-
-            // Template Path
-            string templatePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Resources", "boj_certificate_template.docx");
-
-            DocumentEditor.EditWordDocument(
-               templatePath,
-value.FirstName + " " + value.LastName,
-                CourseName,
-                "",
-                formattedDate
-            );
+            AliasListFilePath = dialog.FileName;
+            AliasListFileName = GetFileName(AliasListFilePath);
         }
     }
 
-    private bool CanGenerateCertificate(object obj)
+    private void RemoveAliasListExecute(object obj)
     {
-        // Check if all fields are filled
-        return true;
+        Console.WriteLine("Remove Alias Map");
+        ClearAliasListPath();
+    }
+
+    private void GenerateMergeListExecute(object obj)
+    {
+        Console.WriteLine("Generating Merge List");
     }
 
     private string GetFileName(string filePath)

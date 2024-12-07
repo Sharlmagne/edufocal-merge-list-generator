@@ -8,9 +8,9 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using EdufocalCertificateGenerator.ViewModels;
+using EdufocalMergeListGenerator.ViewModels;
 
-namespace EdufocalCertificateGenerator;
+namespace EdufocalMergeListGenerator;
 
 public partial class MainWindow : Window
 {

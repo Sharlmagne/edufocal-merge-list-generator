@@ -1,4 +1,4 @@
-﻿namespace EdufocalCertificateGenerator.Models;
+﻿namespace EdufocalMergeListGenerator.Models;
 
 public class EmployeeInfo
 {

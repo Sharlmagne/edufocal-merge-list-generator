@@ -8,18 +8,24 @@
         <UseWPF>true</UseWPF>
         <RuntimeIdentifiers>win-x86;win-x64</RuntimeIdentifiers>
         <ApplicationIcon>Resources\edufocal.ico</ApplicationIcon>
-        <RootNamespace>EdufocalCertificateGenerator</RootNamespace>
+        <Company>EduFocal</Company>
+        <Product>Edufocal Merge List Generator</Product>
     </PropertyGroup>
 
     <ItemGroup>
       <Compile Remove=".github\**" />
-      <Compile Remove="Util\**" />
       <EmbeddedResource Remove=".github\**" />
-      <EmbeddedResource Remove="Util\**" />
       <None Remove=".github\**" />
-      <None Remove="Util\**" />
       <Page Remove=".github\**" />
-      <Page Remove="Util\**" />
+    </ItemGroup>
+    
+    <ItemGroup>
+        <None Update="Resources\boj_mail_merge_template.xlsx">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </None>
+        <None Update="Resources\boj_certificate_mail_merge_template.docx">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </None>
     </ItemGroup>
 
     <ItemGroup>
@@ -32,14 +38,7 @@
 
     <ItemGroup>
       <PackageReference Include="Bytescout.Spreadsheet" Version="4.7.1.2054" />
-      <PackageReference Include="DocumentFormat.OpenXml" Version="3.2.0" />
       <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.1" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <None Update="Resources\boj_certificate_template.docx">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      </None>
     </ItemGroup>
 
 </Project>
