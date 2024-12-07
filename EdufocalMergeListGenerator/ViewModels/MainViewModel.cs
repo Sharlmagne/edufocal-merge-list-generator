@@ -17,6 +17,7 @@ public class MainViewModel: ViewModel
 {
 
     private string SECTION_NAME = "EmployeesList";
+    private const string _certificateTemplateName = "boj_certificate_mail_merge_template.docx";
     private string appDirectory = AppDomain.CurrentDomain.BaseDirectory;
     private string _employeesListFilePath;
     private string _employeesListFileName;
@@ -72,6 +73,8 @@ public class MainViewModel: ViewModel
     public ICommand RemoveAliasListCommand { get; set; }
     public ICommand GenerateMergeListCommand { get; set; }
 
+    public ICommand DownloadCertificateTemplateCommand { get; set; }
+
 
     public MainViewModel(Configuration AppConfig)
     {
@@ -80,6 +83,7 @@ public class MainViewModel: ViewModel
         UploadAliasListCommand = new RelayCommand(UploadAliasListExecute, _ => true);
         RemoveAliasListCommand = new RelayCommand(RemoveAliasListExecute, _ => true);
         GenerateMergeListCommand = new RelayCommand(GenerateMergeListExecute, _ => true);
+        DownloadCertificateTemplateCommand = new RelayCommand(DownloadCertificateTemplateExecute, _ => true);
 
         SetAppConfig(AppConfig);
 
@@ -262,6 +266,26 @@ public class MainViewModel: ViewModel
         catch (Exception ex)
         {
             MessageBox.Show("An unexpected error occurred: " + ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+        }
+    }
+
+    private void DownloadCertificateTemplateExecute(object obj)
+    {
+        var dialog = new SaveFileDialog
+        {
+            Filter = "Word files (*.docx)|*.docx",
+            FileName = _certificateTemplateName
+        };
+
+        if (dialog.ShowDialog() == true)
+        {
+            var templateFilePath = Path.Combine(appDirectory, "Resources",  _certificateTemplateName);
+            var newFilePath = dialog.FileName;
+
+            // Clone the template file
+            File.Copy(templateFilePath, newFilePath, true);
+
+            MessageBox.Show("Certificate template downloaded successfully!", "Done", MessageBoxButton.OK, MessageBoxImage.Information);
         }
     }
 

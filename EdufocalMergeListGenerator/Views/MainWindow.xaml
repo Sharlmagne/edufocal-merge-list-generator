@@ -57,8 +57,8 @@
                 </Button.Style>
             </Button>
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,16,0,0">
-                <Button Content="Download Certificate Template" Command="{Binding DownloadCertificateTemplateCommand}" Height="30" Width="180" Background="#1187B7" Foreground="White"/>
-                <Button Content="Generate Mail Merge List" Command="{Binding GenerateMergeListCommand}" Margin="16,0,0,0" Height="30" Width="150" Background="#A46DAC" Foreground="White"/>
+                <Button Content="Download Certificate Template" Command="{Binding DownloadCertificateTemplateCommand}" Height="30" Width="180" Background="#6ea3b8" />
+                <Button Content="Generate Mail Merge List" Command="{Binding GenerateMergeListCommand}" Margin="16,0,0,0" Height="30" Width="150" Background="#a689ab"/>
             </StackPanel>
         </StackPanel>
     </Grid>
